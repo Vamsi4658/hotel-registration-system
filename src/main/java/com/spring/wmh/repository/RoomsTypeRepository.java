@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.spring.wmh.entity.RoomsType;
 
 @Repository
-public interface RoomsRepository extends JpaRepository<RoomsType, Integer> {
+public interface RoomsTypeRepository extends JpaRepository<RoomsType, Integer> {
 
 }

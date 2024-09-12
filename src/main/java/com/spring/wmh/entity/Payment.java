@@ -1,5 +1,6 @@
 package com.spring.wmh.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.hibernate.annotations.JoinColumnOrFormula;
@@ -33,7 +34,7 @@ public class Payment {
 	
 //	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "payment_date", length = 13, nullable = false )
-	private String paymentDate;
+	private LocalDate paymentDate;
 	
 	@Column(name = "payment_status", nullable = false)
 	private boolean paymentStatus;

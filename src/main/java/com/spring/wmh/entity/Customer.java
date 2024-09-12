@@ -1,5 +1,7 @@
 package com.spring.wmh.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,8 +42,8 @@ public class Customer {
 	private String contactNumber;
 	
 //	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "customer_DoB", length = 13, nullable = false)
-	private String dob;
+	@Column(name = "customer_DoB", nullable = false)
+	private LocalDate dob;
 	
 	@Column(name = "address_1", length = 45, nullable = false)
 	private String address1;
@@ -56,8 +58,8 @@ public class Customer {
 	private String pincode;
 
 //	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "customer_added_on", length = 13, nullable = false)
-	private String customerCreatedOn;
+	@Column(name = "created_date", nullable = false)
+	private LocalDate customerCreatedOn;
 
 	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

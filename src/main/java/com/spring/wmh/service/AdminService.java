@@ -1,16 +1,22 @@
 package com.spring.wmh.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spring.wmh.DTO.AdminDTO;
 
 public interface AdminService {
 
-	public AdminDTO addAdmin(AdminDTO adminDto);
-//	
-//	public List<Long> addMultipleAdmins(List<AdminDTO> adminDTOs);
-//	
-//	public List<AdminDTO> getAllAdmins();
-//	
-//	public void deleteAdminById();
+	public Object addAdmin(AdminDTO adminDto);
+
+	public List<Map<String, Object>> getAllAdmins();
+	
+	public Object getAdminById(int id);
+	
+	public Object updateAdmin(int id, AdminDTO adminDTO);
+	
+	public Object deleteAdminById(int id);
+	
+	
+	
 }

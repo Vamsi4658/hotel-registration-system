@@ -1,5 +1,6 @@
 package com.spring.wmh.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,19 +33,19 @@ public class RoomBooking {
 	private int booking_id;
 	
 //	@Temporal(TemporalType.DATE)
-	@Column(name = "check_in_date", length = 13, nullable = false)
-	private String checkInDate;
+	@Column(name = "check_in_date",nullable = false)
+	private LocalDate checkInDate;
 	
 //	@Temporal(TemporalType.DATE)
-	@Column(name = "check_out_date", length = 13, nullable = false)
-	private String toDate;
+	@Column(name = "check_out_date", nullable = false)
+	private LocalDate CHeckOutDate;
 	
 	@Column(name = "no_of_people")
 	private byte noOfPeople;
 	
 //	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "booking_date", length = 13, nullable = false)
-	private String bookedOn;
+	@Column(name = "booking_date", nullable = false)
+	private LocalDate bookedOn;
 	
 	
 	@ManyToOne

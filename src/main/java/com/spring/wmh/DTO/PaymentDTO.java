@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class PaymentDTO {
 
-	private int paymentId;
+	
 	private String paymentMode;
-	private Date paymentDate;
+	private String paymentDate;
 	private String paymentStatus;
-	private long cardNumber;
+	private String cardNumber;
 	private int cvv;
-	private RoomBooking roomBooking;
+	private RoomBookingDTO roomBooking;
 	
 }

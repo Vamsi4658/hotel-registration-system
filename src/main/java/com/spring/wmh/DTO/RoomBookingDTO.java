@@ -9,13 +9,14 @@ import lombok.Data;
 @Data
 public class RoomBookingDTO {
 
-	private int booking_id;
-	private Date fromDate;
-	private Date toDate;
+	
+	private String fromDate;
+	private String toDate;
 	private byte noOfPeople;
-	private Date bookedOn;
-	private RoomTypeDTO room;	
-	private List<PaymentDTO> paymentDtos = new ArrayList<PaymentDTO>();	
+	private String bookedOn;
+	
+	private RoomTypeDTO room;
+	
 	private CustomerDTO customerDto;
 	
 }

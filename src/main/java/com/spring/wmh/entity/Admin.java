@@ -1,5 +1,6 @@
 package com.spring.wmh.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +38,7 @@ public class Admin {
 	 
 //	 @Temporal(TemporalType.TIMESTAMP)
 	 @Column(name = "admin_created_date")	 
-	 private String adminCreatedOn;
+	 private LocalDate adminCreatedOn;
 	 
 	 @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	 private List<Customer> customer= new ArrayList<Customer>();

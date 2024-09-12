@@ -1,6 +1,7 @@
 package com.spring.wmh.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -30,17 +32,31 @@ public class AdminController {
 	private AdminService adminService;
 
 	@PostMapping("/add")
-	public ResponseEntity<AdminDTO> addAdmin(@RequestBody AdminDTO adminDto){
-		
-		AdminDTO dto = adminService.addAdmin(adminDto);
-		return new ResponseEntity<>(dto,HttpStatus.OK);
+	public Object addAdmin(@RequestBody AdminDTO adminDto){
+		return adminService.addAdmin(adminDto);
 	}
 	
-	@GetMapping("/get/Admins")
-	public ResponseEntity<List<AdminDTO>> showAllAdmins() {
-//		List<AdminDTO> admins = adminService.getAllAdmins();
-		
-		return new ResponseEntity<>(null,HttpStatus.OK);
+	
+	@GetMapping("/getall")
+	public List<Map<String, Object>> showAllAdmins() {
+		return adminService.getAllAdmins();
 	}
 	
+	
+	@PostMapping("/get/{id}")
+	public Object showByAdminId(@PathVariable int id) {
+		return adminService.getAdminById(id);
+	}
+	
+	
+	@PostMapping("/update/{id}")
+	public Object updateByAdminId(@PathVariable int id, @RequestBody AdminDTO adminDTO) {
+		return adminService.updateAdmin(id, adminDTO);
+	}
+	
+	
+	@PostMapping("/delete/{id}")
+	public Object removeByAdminId(@PathVariable int id) {
+		return adminService.deleteAdminById(id);
+	}
 }

@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class AdminDTO {
 
-	 private int adminId;
+	
 	 private String adminUserName;
 	 private String adminPassword;
-	 private String adminCreatedOn;	
-//	 private List<CustomerDTO> customer= new ArrayList<CustomerDTO>();
+//	 private String adminCreatedOn;	
+	// private List<CustomerDTO> customer;
 	 
 }
