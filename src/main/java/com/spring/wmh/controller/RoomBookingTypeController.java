@@ -1,6 +1,7 @@
 package com.spring.wmh.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,13 +25,13 @@ public class RoomBookingTypeController {
 	@Autowired
 	RoomBookingService roomBookingService;
 	
-	@PostMapping("/{id}/addcustomer")
-	public Object saveCustomer(int customerId, int roomTypeId,@RequestBody RoomBookingDTO RoomBookingDTO) {
+	@PostMapping("/{roomTypeId}/bookon/{customerId}/save")
+	public Object saveCustomer(@PathVariable int customerId,@PathVariable int roomTypeId,@RequestBody RoomBookingDTO RoomBookingDTO) {
 		return roomBookingService.saveBooking(customerId,roomTypeId, RoomBookingDTO) ;
 	}
 	
 	@GetMapping("/getall")
-	public List<Object> getAllCustomer() {
+	public List<Map<String, Object>> getAllCustomer() {
 		return roomBookingService.getAllBookings();
 	}
 	
@@ -45,7 +46,7 @@ public class RoomBookingTypeController {
 //	}
 //	
 	@PostMapping("/delete/{id}")
-	public String removeById(@PathVariable int id) {
+	public Object removeById(@PathVariable int id) {
 		return roomBookingService.deleteBookingInfoById(id);
 	}
 }

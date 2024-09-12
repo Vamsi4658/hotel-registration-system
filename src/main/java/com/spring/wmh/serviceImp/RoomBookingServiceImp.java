@@ -86,35 +86,31 @@ public class RoomBookingServiceImp implements RoomBookingService{
 	}
 
 	@Override
-	public List<Object> getAllBookings() {
+	public List<Map<String, Object>> getAllBookings() {
 		
-		List<Object> bookingObjects = new ArrayList<>();
+		
+		List<Map<String, Object>> maps = new ArrayList<Map<String,Object>>();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		List<RoomBooking> bookings = roomBookingRepository.findAll();	
 				
 		for (RoomBooking booking : bookings) {
 			
-			CustomerDTO customerDTO = new CustomerDTO();
-			RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-			RoomBookingDTO roomBookingDTO = new RoomBookingDTO();
-					
-			customerDTO.setCustomerFirstName(booking.getCustomer().getCustomerFirstName());
-			customerDTO.setContactNumber(booking.getCustomer().getContactNumber());
-				
-			roomTypeDTO.setRoomType(booking.getRoom().getRoomType());
-			roomTypeDTO.setRoomPrice(booking.getRoom().getRoomPrice());
-			roomTypeDTO.setRoomType(booking.getRoom().getRoomType());
-
-			roomBookingDTO.setCustomerDto(customerDTO);
-			roomBookingDTO.setRoom(roomTypeDTO);
-			roomBookingDTO.setFromDate(booking.getCheckInDate().toString());
-			roomBookingDTO.setToDate(booking.getCHeckOutDate().toString());
-			roomBookingDTO.setNoOfPeople(booking.getNoOfPeople());
-			roomBookingDTO.setBookedOn(booking.getBookedOn().toString());
+			map.put("customerName", booking.getCustomer().getCustomerFirstName());
+			map.put("customerLastName", booking.getCustomer().getCustomerLastName());
+			map.put("customerContactNumber", booking.getCustomer().getContactNumber());
+			map.put("roomType", booking.getRoom().getRoomType());
+			map.put("roomPrice", booking.getRoom().getRoomPrice());
+			map.put("checkInDate", booking.getCheckInDate().toString());
+			map.put("checkOutdate", booking.getCHeckOutDate().toString());
+			map.put("noOfPeople", booking.getNoOfPeople());
+			map.put("roomBookedOn", booking.getBookedOn().toString());
 			
-			bookingObjects.add(roomBookingDTO);
+			
 		}
 		
-		return bookingObjects;
+		return maps;
 	}
 
 	@Override
@@ -125,27 +121,18 @@ public class RoomBookingServiceImp implements RoomBookingService{
 		RoomBooking booking = roomBookingRepository.findById(id).orElseGet(null);
 		if (booking!=null) {
 			
-			CustomerDTO customerDTO = new CustomerDTO();
-			RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-			RoomBookingDTO roomBookingDTO = new RoomBookingDTO();
-					
-			customerDTO.setCustomerFirstName(booking.getCustomer().getCustomerFirstName());
-			customerDTO.setContactNumber(booking.getCustomer().getContactNumber());
-				
-			roomTypeDTO.setRoomType(booking.getRoom().getRoomType());
-			roomTypeDTO.setRoomPrice(booking.getRoom().getRoomPrice());
-			roomTypeDTO.setRoomType(booking.getRoom().getRoomType());
-
-			roomBookingDTO.setCustomerDto(customerDTO);
-			roomBookingDTO.setRoom(roomTypeDTO);
-			roomBookingDTO.setFromDate(booking.getCheckInDate().toString());
-			roomBookingDTO.setToDate(booking.getCHeckOutDate().toString());
-			roomBookingDTO.setNoOfPeople(booking.getNoOfPeople());
-			roomBookingDTO.setBookedOn(booking.getBookedOn().toString());
+			map.put("customerName", booking.getCustomer().getCustomerFirstName());
+			map.put("customerLastName", booking.getCustomer().getCustomerLastName());
+			map.put("customerContactNumber", booking.getCustomer().getContactNumber());
+			map.put("roomType", booking.getRoom().getRoomType());
+			map.put("roomPrice", booking.getRoom().getRoomPrice());
+			map.put("checkInDate", booking.getCheckInDate().toString());
+			map.put("checkOutdate", booking.getCHeckOutDate().toString());
+			map.put("noOfPeople", booking.getNoOfPeople());
+			map.put("roomBookedOn", booking.getBookedOn().toString());
 			
-			map.put("Booking Details", roomBookingDTO);
 		} else {
-			map.put("data not found", null);
+			map.put("Error", "Data not found on this ID");
 		}
 		return map;
 	}
@@ -160,41 +147,51 @@ public class RoomBookingServiceImp implements RoomBookingService{
 		
 		if (booking!=null) {
 			
-			Customer customer = new Customer();
-			RoomsType roomsType = new RoomsType();
+//			Customer customer = new Customer();
+//			RoomsType roomsType = new RoomsType();
+//			
+//			booking.setCustomer(customer);
+//			booking.setRoom(roomsType);
+//			
+//			booking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
+//			booking.setCHeckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
+//			booking.setBookedOn(LocalDate.now());
+// 			booking.setNoOfPeople(bookingDTO.getNoOfPeople());
+//			
+//			roomBookingRepository.save(booking);
+//			
+//			CustomerDTO customerDTO = new CustomerDTO();
+//			
+//			customerDTO.setCustomerFirstName(booking.getCustomer().getCustomerFirstName());
+//			customerDTO.setContactNumber(booking.getCustomer().getContactNumber());
+//			
+//			RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+//			
+//			roomsType.setRoomType(booking.getRoom().getRoomType());
+//			roomsType.setRoomPrice(booking.getRoom().getRoomPrice());
+//			roomsType.setRoomType(booking.getRoom().getRoomType());
+//			
+//			RoomBookingDTO bookingDto = new RoomBookingDTO();
+//			bookingDto.setCustomerDto(customerDTO);
+//			bookingDto.setRoom(roomTypeDTO);
+//			bookingDto.setFromDate(booking.getCheckInDate().toString());
+//			bookingDto.setToDate(booking.getCHeckOutDate().toString());
+//			bookingDto.setNoOfPeople(booking.getNoOfPeople());
+//			bookingDto.setBookedOn(booking.getBookedOn().toString());
 			
-			booking.setCustomer(customer);
-			booking.setRoom(roomsType);
 			
+			booking.setCustomer(booking.getCustomer());
+			booking.setRoom(booking.getRoom());
 			booking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
 			booking.setCHeckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
-			booking.setBookedOn(LocalDate.now());
+//			booking.setBookedOn(LocalDate.now());
  			booking.setNoOfPeople(bookingDTO.getNoOfPeople());
 			
 			roomBookingRepository.save(booking);
 			
-			CustomerDTO customerDTO = new CustomerDTO();
-			
-			customerDTO.setCustomerFirstName(booking.getCustomer().getCustomerFirstName());
-			customerDTO.setContactNumber(booking.getCustomer().getContactNumber());
-			
-			RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-			
-			roomsType.setRoomType(booking.getRoom().getRoomType());
-			roomsType.setRoomPrice(booking.getRoom().getRoomPrice());
-			roomsType.setRoomType(booking.getRoom().getRoomType());
-			
-			RoomBookingDTO bookingDto = new RoomBookingDTO();
-			bookingDto.setCustomerDto(customerDTO);
-			bookingDto.setRoom(roomTypeDTO);
-			bookingDto.setFromDate(booking.getCheckInDate().toString());
-			bookingDto.setToDate(booking.getCHeckOutDate().toString());
-			bookingDto.setNoOfPeople(booking.getNoOfPeople());
-			bookingDto.setBookedOn(booking.getBookedOn().toString());
-			
-			map.put("Booking Details", bookingDto);
+			map.put("bookingDetails", "Updated");
 		} else {
-			map.put("data not found", null);
+			map.put("Error", "Id not found");
 		}
 		return map;
 		
@@ -202,15 +199,19 @@ public class RoomBookingServiceImp implements RoomBookingService{
 	}
 
 	@Override
-	public String deleteBookingInfoById(int id) {
+	public Object deleteBookingInfoById(int id) {
 
+		Map<String, Object> map = new HashMap<>();
+		
 		RoomBooking booking = roomBookingRepository.findById(id).orElse(null);
 		if (booking!=null) {
 			roomBookingRepository.deleteById(id);
-			return "data deleted successfuly";
+			
+			map.put("booking", "Deleted");
 		} else {
-			return "data NOT found";
+			map.put("Error", "Id not found");
 		}
+		return map;
 	}
 	
 	

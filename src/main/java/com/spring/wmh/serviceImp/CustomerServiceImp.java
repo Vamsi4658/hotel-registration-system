@@ -32,11 +32,13 @@ public class CustomerServiceImp implements CustomerService{
 	@Override
 	public Object saveCustomer(int id, CustomerDTO customerDTO) { 
 		
-		Map<String, Object> map =new HashMap<>();
+		Map<, Object> map =new HashMap<>();
 
 		Admin admin = adminRepository.findById(id).orElse(null);
-		if (admin!=null) {
+		if (admin !=null) {
+			
 			Customer customer = new Customer();
+			
 			customer.setCustomerFirstName(customerDTO.getCustomerFirstName());
 			customer.setCustomerLastName(customerDTO.getCustomerLastName());
 			customer.setCustomerEmail(customerDTO.getCustomerEmail());
@@ -50,7 +52,9 @@ public class CustomerServiceImp implements CustomerService{
 			customer.setCity(customerDTO.getCity());
 			customer.setPincode(customerDTO.getPincode());
 			customer.setCustomerCreatedOn(LocalDate.now());
+			
 			customer.setAdmin(admin);
+			
 			customeRepository.save(customer);
 			
 			map.put("added sucessfull", "customer: "+customer.getCustomerFirstName()+" "+customer.getCustomerLastName());
@@ -58,6 +62,7 @@ public class CustomerServiceImp implements CustomerService{
 		} else {
 			map.put("error", "Admin id not found");
 		}
+		
 		return map;
 	}
 
