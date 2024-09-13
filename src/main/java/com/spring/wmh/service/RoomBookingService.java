@@ -17,7 +17,9 @@ public interface RoomBookingService {
 	
 	public Object getbookingById(int id);
 	
-	public Object updateBookIngById(int id, RoomBookingDTO bookingDTO);
+	public Object updateBookIngById(int bookingId, RoomBookingDTO bookingDTO);
 	
 	public Object deleteBookingInfoById(int id);
+	
+	Object bookingConformation(int bookingId);
 }

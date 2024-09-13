@@ -20,7 +20,7 @@ import com.spring.wmh.service.RoomBookingService;
 @CrossOrigin
 @RestController
 @RequestMapping("/room/booking")
-public class RoomBookingTypeController {
+public class RoomBookingController {
 
 	@Autowired
 	RoomBookingService roomBookingService;
@@ -40,13 +40,18 @@ public class RoomBookingTypeController {
 		return roomBookingService.getbookingById(id);
 	}
 	
-//	@PostMapping("/update/{id}")
-//	public Object updateById(int customerId, int roomTypeId, @RequestBody RoomBookingDTO bookingDTO) {
-////		return roomBookingService.updateBookIngById(customerId,roomTypeId, bookingDTO);
-//	}
+	@PostMapping("/update/{bookingId}")
+	public Object updateById(@PathVariable int bookingId, @RequestBody RoomBookingDTO bookingDTO) {
+		return roomBookingService.updateBookIngById(bookingId, bookingDTO);
+	}
 //	
 	@PostMapping("/delete/{id}")
 	public Object removeById(@PathVariable int id) {
 		return roomBookingService.deleteBookingInfoById(id);
+	}
+	
+	@PostMapping("/{id}/status")
+	public Object confirmation(@PathVariable int id) {
+		return roomBookingService.bookingConformation(id);
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.wmh.DTO.ConfirmationDto;
 import com.spring.wmh.DTO.CustomerDTO;
 import com.spring.wmh.DTO.RoomBookingDTO;
 import com.spring.wmh.DTO.RoomTypeDTO;
@@ -34,53 +35,53 @@ public class RoomBookingServiceImp implements RoomBookingService{
 	private RoomsTypeRepository roomsTypeRepository;
 
 	
-	
+	/*
+	 * Registration   
+	 */
 	@Override
 	public Object saveBooking(int customerId, int roomTypeId, RoomBookingDTO bookingDTO) {
-		
+		System.out.println("\n\n"+bookingDTO.getFromDate()+"       "+bookingDTO.getToDate());
 		Map<String, Object> map = new HashMap<>();
-		
-		RoomBookingDTO bookingDto =new RoomBookingDTO();
 		
 		Customer customer = customeRepository.findById(customerId).orElse(null);
 		RoomsType roomsType = roomsTypeRepository.findById(roomTypeId).orElse(null);
-		
-		// String to date
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	
 
 		if(customer!=null && roomsType!=null) {
-	
-			RoomBooking booking = new RoomBooking();
+			RoomBooking roomBooking = new RoomBooking();
 			
-			booking.setCustomer(customer);
-			booking.setRoom(roomsType);
-			booking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
-			booking.setCHeckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
-			booking.setBookedOn(LocalDate.now());
- 			booking.setNoOfPeople(bookingDTO.getNoOfPeople());
+			roomBooking.setCustomer(customer);
+			roomBooking.setRoom(roomsType);
 			
-			roomBookingRepository.save(booking);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			
-//			CustomerDTO customerDTO = new CustomerDTO();
-//			
-//			customerDTO.setCustomerFirstName(booking.getCustomer().getCustomerFirstName());
-//			customerDTO.setContactNumber(booking.getCustomer().getContactNumber());
-//			
-//			RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-//			
-//			roomsType.setRoomType(booking.getRoom().getRoomType());
-//			roomsType.setRoomPrice(booking.getRoom().getRoomPrice());
-//			
-//			bookingDto.setCustomerDto(customerDTO);
-//			bookingDto.setRoom(roomTypeDTO);
-//			bookingDto.setFromDate(booking.getCheckInDate().toString());
-//			bookingDto.setToDate(booking.getCHeckOutDate().toString());
-//			bookingDto.setNoOfPeople(booking.getNoOfPeople());
-//			bookingDto.setBookedOn(booking.getBookedOn().toString());
+			if (bookingDTO.getFromDate()!=null) {
+				roomBooking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
+			}else {
+				map.put("checkInDate", "check-in should not me null");
+			}
+			if(bookingDTO.getToDate()!= null) {				
+				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
+			} else {
+				map.put("checkOutDate", "check-out should not me null");
+			}
 			
-			map.put("Status", "Booked");
-		}else {
-			map.put("Error", "cutomer or room data not found");
+			roomBooking.setBookedOn(LocalDate.now());
+			
+			if (bookingDTO.getNoOfPeople()<=roomsType.getMaxNoOfPeople() && (bookingDTO.getNoOfPeople()>0)) {				
+				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
+			} else {
+				map.put("noOfPeople", "max people "+roomsType.getMaxNoOfPeople());
+			}
+			
+			
+			if (map.size()==0) {
+				roomBookingRepository.save(roomBooking);
+				map.put("Status", "booking saved");
+			}
+		} else {
+			
+			map.put("error", "Customer or room details not found");
 		}
 		return map;
 	}
@@ -103,7 +104,7 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			map.put("roomType", booking.getRoom().getRoomType());
 			map.put("roomPrice", booking.getRoom().getRoomPrice());
 			map.put("checkInDate", booking.getCheckInDate().toString());
-			map.put("checkOutdate", booking.getCHeckOutDate().toString());
+			map.put("checkOutdate", booking.getCheckOutDate().toString());
 			map.put("noOfPeople", booking.getNoOfPeople());
 			map.put("roomBookedOn", booking.getBookedOn().toString());
 			
@@ -127,7 +128,7 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			map.put("roomType", booking.getRoom().getRoomType());
 			map.put("roomPrice", booking.getRoom().getRoomPrice());
 			map.put("checkInDate", booking.getCheckInDate().toString());
-			map.put("checkOutdate", booking.getCHeckOutDate().toString());
+			map.put("checkOutdate", booking.getCheckOutDate().toString());
 			map.put("noOfPeople", booking.getNoOfPeople());
 			map.put("roomBookedOn", booking.getBookedOn().toString());
 			
@@ -138,12 +139,12 @@ public class RoomBookingServiceImp implements RoomBookingService{
 	}
 
 	@Override
-	public Object updateBookIngById(int id, RoomBookingDTO bookingDTO) {
+	public Object updateBookIngById(int bookingId, RoomBookingDTO bookingDTO) {
 		
 		Map<String, Object> map = new HashMap<>();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		
-		RoomBooking booking = roomBookingRepository.findById(id).orElseGet(null);
+		RoomBooking booking = roomBookingRepository.findById(bookingId).orElseGet(null);
 		
 		if (booking!=null) {
 			
@@ -183,7 +184,7 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			booking.setCustomer(booking.getCustomer());
 			booking.setRoom(booking.getRoom());
 			booking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
-			booking.setCHeckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
+			booking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
 //			booking.setBookedOn(LocalDate.now());
  			booking.setNoOfPeople(bookingDTO.getNoOfPeople());
 			
@@ -211,6 +212,31 @@ public class RoomBookingServiceImp implements RoomBookingService{
 		} else {
 			map.put("Error", "Id not found");
 		}
+		return map;
+	}
+
+	@Override
+	public Object bookingConformation(int bookingId) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		RoomBooking booking = roomBookingRepository.findById(bookingId).orElse(null);
+		if (booking!=null) {			
+			
+			ConfirmationDto confirmationDto = new ConfirmationDto();
+			
+			map.put("customerName", booking.getCustomer().getCustomerFirstName()+" "+booking.getCustomer().getCustomerLastName());
+			map.put("roomType", booking.getRoom().getRoomType());
+			map.put("fromDate", booking.getCheckInDate().toString());
+			map.put("toDate", booking.getCheckOutDate().toString());
+			map.put("noOfPeople", booking.getNoOfPeople());
+			map.put("price", booking.getRoom().getRoomPrice());
+			map.put("confirmation", true);
+			
+		} else {
+			map.put("Error", "Booking details not found");
+		}
+		
 		return map;
 	}
 	

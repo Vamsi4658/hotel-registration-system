@@ -24,16 +24,16 @@ public class RoomsType {
 	@Column(name = "room_id")
 	private int roomId;
 	
-	@Column(name = "room_type", length = 20, nullable = false)
+	@Column(name = "room_type", length = 20)
 	private String roomType;
 	
-	@Column(name = "room_count", nullable = false)
+	@Column(name = "room_count")
 	private int roomCount;
 	
-	@Column(name = "room_price", nullable = false)
+	@Column(name = "room_price")
 	private double roomPrice;
 	
-	@Column(name = "max_no_of_people", nullable = false)
+	@Column(name = "max_no_of_people")
 	private byte maxNoOfPeople;
 
 	@OneToMany(mappedBy = "room", cascade = CascadeType.ALL,fetch = FetchType.LAZY)

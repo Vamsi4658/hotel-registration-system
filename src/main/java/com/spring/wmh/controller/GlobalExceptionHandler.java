@@ -1,5 +1,6 @@
 package com.spring.wmh.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,4 +23,18 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.badRequest().body(errors);
     }
+	
+	
+
+	    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+	    public ResponseEntity<String> handleSQLIntegrityConstraintViolation(SQLIntegrityConstraintViolationException ex) {
+	        // Log and send a meaningful response
+	        return new ResponseEntity<>("Database constraint violated: " + ex.getMessage(), HttpStatus.CONFLICT);
+	    }
+	    
+//	    @ExceptionHandler(CustomAPIException.class)
+//	    public ResponseEntity<String> handleCustomAPIException(CustomAPIException ex) {
+//	        // Handle your custom exception
+//	        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//	    }
 }

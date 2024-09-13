@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.wmh.DTO.AdminDTO;
+import com.spring.wmh.DTO.LoginDto;
 import com.spring.wmh.entity.Admin;
 import com.spring.wmh.service.AdminService;
 
@@ -58,5 +59,10 @@ public class AdminController {
 	@PostMapping("/delete/{id}")
 	public Object removeByAdminId(@PathVariable int id) {
 		return adminService.deleteAdminById(id);
+	}
+	
+	@PostMapping("/login")
+	public Object logInvalidation(@Valid @RequestBody LoginDto logDto) {
+		return adminService.loginValidation(logDto);
 	}
 }

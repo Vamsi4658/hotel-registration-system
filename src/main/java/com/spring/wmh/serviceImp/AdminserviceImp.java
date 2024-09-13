@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.wmh.DTO.AdminDTO;
+import com.spring.wmh.DTO.LoginDto;
 import com.spring.wmh.entity.Admin;
 import com.spring.wmh.repository.AdminRepository;
 import com.spring.wmh.service.AdminService;
@@ -101,7 +102,7 @@ public class AdminserviceImp implements AdminService{
 			map.put("Error", "Admin not found");
 		}
 		return map;
-		
+		  
 	}
 	
 	@Override
@@ -118,6 +119,28 @@ public class AdminserviceImp implements AdminService{
 			map.put("Error", "admin id not found");
 		}
 		 return map;
+	}
+
+	
+	
+	@Override
+	public Object loginValidation(LoginDto loginDto) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Admin> all = adminRepository.findAll();
+		
+		for (Admin admin : all) {
+			
+			if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
+				
+				map.put("Login", "Sucessfull");
+				return map;
+			}	
+		}
+		
+		map.put("LoginFailed", "Invalid details");
+		return map;
 	}
 
 

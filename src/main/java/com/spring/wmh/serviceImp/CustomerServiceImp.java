@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.wmh.DTO.AdminDTO;
 import com.spring.wmh.DTO.CustomerDTO;
+import com.spring.wmh.DTO.SearchExistingCustomerDto;
 import com.spring.wmh.entity.Admin;
 import com.spring.wmh.entity.Customer;
 import com.spring.wmh.repository.AdminRepository;
@@ -32,7 +33,7 @@ public class CustomerServiceImp implements CustomerService{
 	@Override
 	public Object saveCustomer(int id, CustomerDTO customerDTO) { 
 		
-		Map<, Object> map =new HashMap<>();
+		Map<String, Object> map =new HashMap<>();
 
 		Admin admin = adminRepository.findById(id).orElse(null);
 		if (admin !=null) {
@@ -174,6 +175,42 @@ public class CustomerServiceImp implements CustomerService{
 			map.put("Error", "customer not found");
 		
 		return map;
+	}
+
+
+	@Override
+	public List<Map<String, Object>> searchExistedCustomer(SearchExistingCustomerDto existingCustomerDto) {
+		
+		String customerContact = existingCustomerDto.getCustomerContact();
+		String customerLastName = existingCustomerDto.getCustomerLastName();
+				
+		// Query the database for matching customers
+	    List<Customer> customers = customeRepository.findByLastNameOrContact(customerLastName, customerContact);
+	    List<Map<String, Object>> maps = new ArrayList<>();
+	    Map<String, Object> map = new HashMap<>();
+
+	    if (customers.size()!=0) {
+	    	for (Customer customer : customers) {
+	    		
+		        // Populate the map with customer details
+		        map.put("customerName", customer.getCustomerFirstName() + " " + customer.getCustomerLastName());
+		        map.put("customerEmailId", customer.getCustomerEmail());
+		        map.put("customerContactNumber", customer.getContactNumber());
+		        map.put("address1", customer.getAddress1());
+		        map.put("address2", customer.getAddress2());
+		        map.put("city", customer.getCity());
+		        map.put("pincode", customer.getPincode());
+		        map.put("adminId", customer.getAdmin().getAdminId());
+		        map.put("adminName", customer.getAdmin().getAdminUserName());
+		        
+
+		        // Add map to the list
+		        maps.add(map);
+		    }
+		} else {
+			map.put("Error", "Data not found");
+		}
+	    return maps;
 	}
 	
 	

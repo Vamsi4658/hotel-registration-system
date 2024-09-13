@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.wmh.DTO.CustomerDTO;
+import com.spring.wmh.DTO.SearchExistingCustomerDto;
 import com.spring.wmh.service.CustomerService;
 
 import jakarta.validation.Valid;
-
 
 
 @CrossOrigin
@@ -27,8 +28,14 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 	
+	@PostMapping("/getexisting")
+	public List<Map<String, Object>> getCustomerByLastNameAndContact(@Valid @RequestBody SearchExistingCustomerDto existingCustomerDto) {
+
+		return customerService.searchExistedCustomer(existingCustomerDto);
+	}
+	
 	@PostMapping("/{id}/addcustomer")
-	public Object saveCustomer(@PathVariable int id,@RequestBody CustomerDTO customerDTO) {
+	public Object saveCustomer(@Validated @PathVariable int id,@RequestBody CustomerDTO customerDTO) {
 		return customerService.saveCustomer(id, customerDTO) ;
 	}
 	

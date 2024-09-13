@@ -36,8 +36,8 @@ public class Payment {
 	@Column(name = "payment_date", length = 13, nullable = false )
 	private LocalDate paymentDate;
 	
-	@Column(name = "payment_status", nullable = false)
-	private boolean paymentStatus;
+	@Column(name = "payment_status",length = 10, nullable = false)
+	private String paymentStatus;
 	
 	@Column(name = "card_number", length = 16, nullable = false)
 	private String cardNumber;

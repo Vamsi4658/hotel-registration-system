@@ -30,7 +30,7 @@ public class RoomBooking {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "booking_id")
-	private int booking_id;
+	private int bookingId;
 	
 //	@Temporal(TemporalType.DATE)
 	@Column(name = "check_in_date",nullable = false)
@@ -38,7 +38,7 @@ public class RoomBooking {
 	
 //	@Temporal(TemporalType.DATE)
 	@Column(name = "check_out_date", nullable = false)
-	private LocalDate CHeckOutDate;
+	private LocalDate checkOutDate;
 	
 	@Column(name = "no_of_people")
 	private byte noOfPeople;
