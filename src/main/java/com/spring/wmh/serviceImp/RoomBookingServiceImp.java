@@ -48,35 +48,48 @@ public class RoomBookingServiceImp implements RoomBookingService{
 	
 
 		if(customer!=null && roomsType!=null) {
-			RoomBooking roomBooking = new RoomBooking();
-			
-			roomBooking.setCustomer(customer);
-			roomBooking.setRoom(roomsType);
 			
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			
-			if (bookingDTO.getFromDate()!=null) {
-				roomBooking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
-			}else {
+			LocalDate today = LocalDate.now();
+			if (bookingDTO.getFromDate()==null) {				
 				map.put("checkInDate", "check-in should not me null");
+			}else {
+				if (bookingDTO.getFromDate()=="") {				
+					map.put("checkInDate", "check-in date should not be empty");
+				} else {
+					if (LocalDate.parse(bookingDTO.getFromDate(), formatter).isBefore(today)) {						
+						map.put("checkInDate", "check-in date should not be past");
+					}
+				}
 			}
-			if(bookingDTO.getToDate()!= null) {				
-				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
-			} else {
+			if (bookingDTO.getToDate()==null) {				
 				map.put("checkOutDate", "check-out should not me null");
+			}else {
+				if (bookingDTO.getToDate()=="") {				
+					map.put("checkOutDate", "check-out date should not be empty");
+				} else {
+					if (LocalDate.parse(bookingDTO.getToDate(), formatter).isBefore(today)) {						
+						map.put("checkOutDate", "check-out date should not be past");
+					}
+				}
 			}
 			
-			roomBooking.setBookedOn(LocalDate.now());
-			
-			if (bookingDTO.getNoOfPeople()<=roomsType.getMaxNoOfPeople() && (bookingDTO.getNoOfPeople()>0)) {				
-				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
+			if (bookingDTO.getNoOfPeople()<=roomsType.getMaxNoOfPeople() && (bookingDTO.getNoOfPeople()>0)){
+				
 			} else {
 				map.put("noOfPeople", "max people "+roomsType.getMaxNoOfPeople());
 			}
 			
 			
 			if (map.size()==0) {
-				roomBookingRepository.save(roomBooking);
+//				RoomBooking roomBooking = new RoomBooking();
+//				roomBooking.setCustomer(customer);
+//				roomBooking.setRoom(roomsType);
+//				roomBooking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
+//				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
+//				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
+//				roomBooking.setBookedOn(LocalDate.now());
+//				roomBookingRepository.save(roomBooking);
 				map.put("Status", "booking saved");
 			}
 		} else {
@@ -223,7 +236,7 @@ public class RoomBookingServiceImp implements RoomBookingService{
 		RoomBooking booking = roomBookingRepository.findById(bookingId).orElse(null);
 		if (booking!=null) {			
 			
-			ConfirmationDto confirmationDto = new ConfirmationDto();
+//			ConfirmationDto confirmationDto = new ConfirmationDto();
 			
 			map.put("customerName", booking.getCustomer().getCustomerFirstName()+" "+booking.getCustomer().getCustomerLastName());
 			map.put("roomType", booking.getRoom().getRoomType());

@@ -14,7 +14,7 @@ public class PaymentDTO {
 	private String paymentDate;
 	private String paymentStatus;
 	private String cardNumber;
-	private int cvv;
+	private String cvv;
 	private RoomBookingDTO roomBooking;
 	
 }

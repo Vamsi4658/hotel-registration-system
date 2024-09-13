@@ -26,20 +26,63 @@ public class PaymentServiceImp implements PaymentService{
 
 	@Override
 	public Object savePayment(int id, PaymentDTO paymentDTO) {
+		
 		Map<String, Object> map = new HashMap<>();
-
 		RoomBooking roomBooking = bookingRepository.findById(id).orElse(null);
 		
+		Payment pD = paymentRepository.findByCardNumber(paymentDTO.getCardNumber()).orElse(null);
+		
 		if (roomBooking!=null) {
+			
 			Payment payment = new Payment();
-
-			payment.setPaymentMode(paymentDTO.getPaymentMode());
-			payment.setPaymentDate(LocalDate.now());
+			
+			payment.setRoomBooking(roomBooking);
+			/*
+			 *  Validating the info
+			 */
+			if (paymentDTO.getPaymentMode()!=null) {				
+				if (paymentDTO.getPaymentMode().equals("") || paymentDTO.getPaymentMode().equals(" ")) {					
+					map.put("paymentMode", "should not be empty");
+				} else {
+					payment.setPaymentMode(paymentDTO.getPaymentMode());
+				}
+			} else {
+				map.put("paymentMode", "should not be null");
+			}
+			if (paymentDTO.getCardNumber()==null) {				
+				map.put("cardNumber", "Card Number should not null"); // error message
+			} else {
+				
+				if (paymentDTO.getCardNumber().length()==16)					
+					if (pD==null) {
+						payment.setCardNumber(paymentDTO.getCardNumber());
+					} else {						
+						map.put("cardNumber", "card number is already existed");
+					}
+				else 
+					map.put("cardNumber", "Card Number should be 16 digits");
+			}
+			if (paymentDTO.getCvv()==null) {											
+				map.put("cvv", " should not be null");				
+			} else {
+				
+				if (paymentDTO.getCvv().length()==3)	
+					payment.setCvv(Integer.valueOf(paymentDTO.getCvv()));
+				else 				
+					map.put("cvv", " should be 3 Digits");	
+			}
 			payment.setPaymentStatus(paymentDTO.getPaymentStatus());
-			payment.setCardNumber(paymentDTO.getCardNumber());
-			payment.setCvv(paymentDTO.getCvv());
-
-			map.put("status", " Payment successfully ");
+			payment.setPaymentDate(LocalDate.now());
+			/*
+			 * 
+			 *     push payload data into DB
+			 * 
+			 */
+			if (map.size()==0) {				
+				paymentRepository.save(payment);
+				map.put("status", " Payment successfully ");
+				return map;
+			}		
 
 		} else {
 			
@@ -112,7 +155,7 @@ public class PaymentServiceImp implements PaymentService{
 
 			payment.setCardNumber(paymentDTO.getCardNumber());
 
-			payment.setCvv(paymentDTO.getCvv());
+			payment.setCvv(Integer.valueOf(paymentDTO.getCvv()));
 
 			paymentRepository.save(payment);
 

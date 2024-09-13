@@ -35,7 +35,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping("/{id}/addcustomer")
-	public Object saveCustomer(@Validated @PathVariable int id,@RequestBody CustomerDTO customerDTO) {
+	public Object saveCustomer(@Valid @PathVariable int id,@RequestBody CustomerDTO customerDTO) {
 		return customerService.saveCustomer(id, customerDTO) ;
 	}
 	

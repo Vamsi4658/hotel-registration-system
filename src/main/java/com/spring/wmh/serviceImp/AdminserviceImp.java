@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,18 +129,15 @@ public class AdminserviceImp implements AdminService{
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		List<Admin> all = adminRepository.findAll();
+		Admin admin = adminRepository.findByadminUserName(loginDto.getUserName()).orElse(null);
+
+		if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
 		
-		for (Admin admin : all) {
-			
-			if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
-				
-				map.put("Login", "Sucessfull");
-				return map;
-			}	
+			map.put("Login", "Sucessfull");
+		}else {			
+			map.put("LoginFailed", "Invalid details");
 		}
 		
-		map.put("LoginFailed", "Invalid details");
 		return map;
 	}
 

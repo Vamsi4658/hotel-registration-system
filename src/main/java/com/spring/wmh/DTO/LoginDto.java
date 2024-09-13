@@ -11,6 +11,6 @@ public class LoginDto {
 	@Size(min = 3, message = "username should not empty")
 	private String userName;
 	@NotNull(message = "password required")
-	@Size(min = 3, message = "password should not empty")
+	@Size(min = 3, message = "password should not empty not min 3")
 	private String password;
 }

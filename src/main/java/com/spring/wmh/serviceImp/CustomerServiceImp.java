@@ -34,37 +34,141 @@ public class CustomerServiceImp implements CustomerService{
 	public Object saveCustomer(int id, CustomerDTO customerDTO) { 
 		
 		Map<String, Object> map =new HashMap<>();
-
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		Customer eMail = customeRepository.findByCustomerEmail(customerDTO.getCustomerEmail()).orElse(null);
+		Customer cNum = customeRepository.findByContactNumber(customerDTO.getContactNumber()).orElse(null);
+		
 		Admin admin = adminRepository.findById(id).orElse(null);
+		
+		// validate Admin is null or not
+		
 		if (admin !=null) {
 			
 			Customer customer = new Customer();
+//firstName
+			if (customerDTO.getCustomerFirstName()!=null) {			
+				if (customerDTO.getCustomerFirstName()=="" || customerDTO.getCustomerFirstName().length()<=2 ) {
+					map.put("firstName", "first Name Should not be empty must more than 2");	
+				}
+			} else {
+				map.put("firstName", "first Name required");
+			}
+// lastName
+			if (customerDTO.getCustomerLastName()!=null) {				
+				if (customerDTO.getCustomerLastName()==""|| customerDTO.getCustomerLastName().length()<=2 ) {
+					map.put("lastName", "last Name Should not be emptymust more than 2");	
+				}
+			} else {
+				map.put("lastaName", "last Name required");
+			}
+// email
+			if (customerDTO.getCustomerEmail()!=null) {		
+				if (customerDTO.getCustomerEmail()=="") {
+					map.put("email", "email Should not be empty");	
+				}else {
+					if (eMail!=null) {
+						map.put("email", "email already existed");	
+					}
+				}
+			} else {
+				map.put("email", "email required");
+			}
+// contact
+			if (customerDTO.getContactNumber()!=null) {
+				
+				if (customerDTO.getContactNumber().length()!=10) {
+					map.put("contactNumber", "Contact number Should be 10 digits");	
+				}else {
+					boolean matches = customerDTO.getContactNumber().matches("\\d+");
+					if (matches) {
+						if (cNum!=null) {
+							map.put("contactNumber", "mobile number already existed");	
+						}
+					} else {
+						map.put("contactNumber", "mobile number must numeric");	
+					}
+				}
+			} else {
+				map.put("contactNumber", "first Name required");
+			}
+// Dob
+			if (customerDTO.getDob()!=null) {
+				
+				if (customerDTO.getDob()=="") {
+					map.put("dob", "dob Should not be empty");	
+				} else {
+					LocalDate today = LocalDate.now();
+					LocalDate dob = LocalDate.parse(customerDTO.getDob(), formatter);
+					if (dob.isAfter(today)) {
+						map.put("dob", "dob  cannot be in the future");
+					}
+				}
+			} else {
+				map.put("dob", "dob Name required");
+			}
+// address1
+			if (customerDTO.getAddress1()!=null) {
+				
+				if (customerDTO.getAddress1()=="") {
+					map.put("adress1", "Address-1 Should not be empty");
+				}
+			} else {
+				map.put("adress1", "Address-1 Name required");
+			}
+// city
+			if (customerDTO.getCity()!=null) {
+				
+				if (customerDTO.getCity()=="") {
+					map.put("city", "city Should not be empty");	
+				}
+			} else {
+				map.put("city", "city Name required");
+			}
+// pincode
+			if (customerDTO.getPincode()!=null) {
+				
+				if (customerDTO.getPincode().length()!=6) {
+					map.put("pincode", "pincode Should  be 6 digits");	
+				} else {
+					boolean matches = customerDTO.getPincode().matches("\\d+");
+					if (matches!=true) {						
+						map.put("pincode", "pincode must numeric");	
+					} 
+				}
+			} else {
+				map.put("pincode", "pincode required");
+			}
 			
-			customer.setCustomerFirstName(customerDTO.getCustomerFirstName());
-			customer.setCustomerLastName(customerDTO.getCustomerLastName());
-			customer.setCustomerEmail(customerDTO.getCustomerEmail());
-			customer.setContactNumber(customerDTO.getContactNumber());
 			
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			customer.setDob(LocalDate.parse(customerDTO.getDob(),formatter));
-			
-			customer.setAddress1(customerDTO.getAddress1());
-			customer.setAddress2(customerDTO.getAddress2());
-			customer.setCity(customerDTO.getCity());
-			customer.setPincode(customerDTO.getPincode());
-			customer.setCustomerCreatedOn(LocalDate.now());
-			
-			customer.setAdmin(admin);
-			
-			customeRepository.save(customer);
+			if (map.size()==0) {
+				
+				
+				customer.setCustomerFirstName(customerDTO.getCustomerFirstName());
+				customer.setCustomerLastName(customerDTO.getCustomerLastName());
+				customer.setCustomerEmail(customerDTO.getCustomerEmail());
+				customer.setContactNumber(customerDTO.getContactNumber());
+				
+				
+				customer.setDob(LocalDate.parse(customerDTO.getDob(),formatter));
+				
+				customer.setAddress1(customerDTO.getAddress1());
+				customer.setAddress2(customerDTO.getAddress2());
+				customer.setCity(customerDTO.getCity());
+				customer.setPincode(customerDTO.getPincode());
+				customer.setCustomerCreatedOn(LocalDate.now());
+					
+				customer.setAdmin(admin);
+					
+				customeRepository.save(customer);
+			}
 			
 			map.put("added sucessfull", "customer: "+customer.getCustomerFirstName()+" "+customer.getCustomerLastName());
-			
+			return map;
 		} else {
 			map.put("error", "Admin id not found");
+			return map;
 		}
 		
-		return map;
 	}
 
 

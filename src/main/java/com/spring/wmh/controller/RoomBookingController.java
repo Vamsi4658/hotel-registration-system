@@ -26,7 +26,7 @@ public class RoomBookingController {
 	RoomBookingService roomBookingService;
 	
 	@PostMapping("/{roomTypeId}/bookon/{customerId}/save")
-	public Object saveCustomer(@PathVariable int customerId,@PathVariable int roomTypeId,@RequestBody RoomBookingDTO RoomBookingDTO) {
+	public Object saveCustomer(@PathVariable int customerId, @PathVariable int roomTypeId, @RequestBody RoomBookingDTO RoomBookingDTO) {
 		return roomBookingService.saveBooking(customerId,roomTypeId, RoomBookingDTO) ;
 	}
 	
