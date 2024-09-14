@@ -160,9 +160,9 @@ public class CustomerServiceImp implements CustomerService{
 				customer.setAdmin(admin);
 					
 				customeRepository.save(customer);
+				map.put("added sucessfull", "customer: "+customer.getCustomerFirstName()+" "+customer.getCustomerLastName());
 			}
 			
-			map.put("added sucessfull", "customer: "+customer.getCustomerFirstName()+" "+customer.getCustomerLastName());
 			return map;
 		} else {
 			map.put("error", "Admin id not found");

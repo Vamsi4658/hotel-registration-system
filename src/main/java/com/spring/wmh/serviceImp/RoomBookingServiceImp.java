@@ -82,14 +82,14 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			
 			
 			if (map.size()==0) {
-//				RoomBooking roomBooking = new RoomBooking();
-//				roomBooking.setCustomer(customer);
-//				roomBooking.setRoom(roomsType);
-//				roomBooking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
-//				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
-//				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
-//				roomBooking.setBookedOn(LocalDate.now());
-//				roomBookingRepository.save(roomBooking);
+				RoomBooking roomBooking = new RoomBooking();
+				roomBooking.setCustomer(customer);
+				roomBooking.setRoom(roomsType);
+				roomBooking.setCheckInDate(LocalDate.parse(bookingDTO.getFromDate(), formatter));
+				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
+				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
+				roomBooking.setBookedOn(LocalDate.now());
+				roomBookingRepository.save(roomBooking);
 				map.put("Status", "booking saved");
 			}
 		} else {

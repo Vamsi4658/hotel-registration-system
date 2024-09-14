@@ -39,10 +39,10 @@ public class Payment {
 	@Column(name = "payment_status",length = 10, nullable = false)
 	private String paymentStatus;
 	
-	@Column(name = "card_number", length = 16, nullable = false)
+	@Column(name = "card_number", length = 16, nullable = true)
 	private String cardNumber;
 	
-	@Column(name = "cvv", nullable = false)
+	@Column(name = "cvv", nullable = true)
 	private int cvv;
 	/*
 	 *  foreign key

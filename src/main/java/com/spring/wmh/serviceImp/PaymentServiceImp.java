@@ -29,7 +29,7 @@ public class PaymentServiceImp implements PaymentService{
 		
 		Map<String, Object> map = new HashMap<>();
 		RoomBooking roomBooking = bookingRepository.findById(id).orElse(null);
-		
+		// to check unique card number 
 		Payment pD = paymentRepository.findByCardNumber(paymentDTO.getCardNumber()).orElse(null);
 		
 		if (roomBooking!=null) {
@@ -40,45 +40,45 @@ public class PaymentServiceImp implements PaymentService{
 			/*
 			 *  Validating the info
 			 */
+// payment mode			
 			if (paymentDTO.getPaymentMode()!=null) {				
-				if (paymentDTO.getPaymentMode().equals("") || paymentDTO.getPaymentMode().equals(" ")) {					
-					map.put("paymentMode", "should not be empty");
-				} else {
-					payment.setPaymentMode(paymentDTO.getPaymentMode());
+				if (paymentDTO.getPaymentMode().length()<=2) {					
+					map.put("paymentMode", "should not be empty must have 2");
 				}
 			} else {
 				map.put("paymentMode", "should not be null");
 			}
+// card number			
 			if (paymentDTO.getCardNumber()==null) {				
 				map.put("cardNumber", "Card Number should not null"); // error message
 			} else {
-				
-				if (paymentDTO.getCardNumber().length()==16)					
-					if (pD==null) {
-						payment.setCardNumber(paymentDTO.getCardNumber());
-					} else {						
+				if (paymentDTO.getCardNumber().length()==16) {
+					if (pD!=null)
 						map.put("cardNumber", "card number is already existed");
-					}
+				}	
 				else 
 					map.put("cardNumber", "Card Number should be 16 digits");
 			}
+// cvv			
 			if (paymentDTO.getCvv()==null) {											
 				map.put("cvv", " should not be null");				
 			} else {
-				
-				if (paymentDTO.getCvv().length()==3)	
-					payment.setCvv(Integer.valueOf(paymentDTO.getCvv()));
-				else 				
+				if (paymentDTO.getCvv().length()!=3) {					
 					map.put("cvv", " should be 3 Digits");	
+				}					
 			}
-			payment.setPaymentStatus(paymentDTO.getPaymentStatus());
-			payment.setPaymentDate(LocalDate.now());
+			
 			/*
 			 * 
-			 *     push payload data into DB
+			 *     push pay-load data into DB
 			 * 
 			 */
 			if (map.size()==0) {				
+				payment.setPaymentMode(paymentDTO.getPaymentMode());
+				payment.setCardNumber(paymentDTO.getCardNumber());
+				payment.setCvv(Integer.valueOf(paymentDTO.getCvv()));
+				payment.setPaymentStatus(paymentDTO.getPaymentStatus());
+				payment.setPaymentDate(LocalDate.now());
 				paymentRepository.save(payment);
 				map.put("status", " Payment successfully ");
 				return map;

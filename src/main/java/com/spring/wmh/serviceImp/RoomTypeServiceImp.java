@@ -1,5 +1,6 @@
 package com.spring.wmh.serviceImp;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,15 +27,30 @@ public class RoomTypeServiceImp implements RoomTypeService {
 		
 		Map<String, Object> map = new HashMap<>();
 		
-		RoomsType roomsType = new RoomsType();
-		roomsType.setRoomType(roomTypeDTO.getRoomType());
-		roomsType.setRoomPrice(roomTypeDTO.getRoomPrice());
-		roomsType.setRoomCount(roomTypeDTO.getRoomCount());
-		roomsType.setMaxNoOfPeople(roomTypeDTO.getMaxNoOfPeople());	
-		RoomsType save = roomsTypeRepository.save(roomsType);
+		if (roomTypeDTO.getRoomType()==null) {				
+			map.put("roomType", "RoomType should not me null");
+		}else {
+			if (roomTypeDTO.getRoomType().length()>=2) {				
+				map.put("roomType", "RoomType date should not be empty");
+			}
+		}
 		
-		map.put("room", "added sucessfully");
+		if (roomTypeDTO.getRoomPrice()!=0) {				
+			map.put("roomPrice", "RoomPrice should not be empty");
+		} if (roomTypeDTO.getMaxNoOfPeople()!=0 && roomTypeDTO.getMaxNoOfPeople()<=6 ) {				
+			map.put("maxPeople", "maximum people 6");
+		}
 		
+		if(map.size()==0) {
+		
+			RoomsType roomsType = new RoomsType();
+			roomsType.setRoomType(roomTypeDTO.getRoomType());
+			roomsType.setRoomPrice(roomTypeDTO.getRoomPrice());
+			roomsType.setRoomCount(roomTypeDTO.getRoomCount());
+			roomsType.setMaxNoOfPeople(roomTypeDTO.getMaxNoOfPeople());	
+			roomsTypeRepository.save(roomsType);
+			map.put("room", "added sucessfully");
+		}
 		return map;
 	}
 

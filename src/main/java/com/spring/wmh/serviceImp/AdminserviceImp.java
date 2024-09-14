@@ -130,16 +130,17 @@ public class AdminserviceImp implements AdminService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		Admin admin = adminRepository.findByadminUserName(loginDto.getUserName()).orElse(null);
-
-		if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
+		if(admin!=null){
+			if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
 		
-			map.put("Login", "Sucessfull");
-		}else {			
-			map.put("LoginFailed", "Invalid details");
+				map.put("Login", "Sucessfull");
+			}else {			
+				map.put("LoginFailed", "Invalid details");
+			}
+		} else {
+			map.put("LoginFailed", "Admin not found");
 		}
-		
 		return map;
 	}
-
 
 }
