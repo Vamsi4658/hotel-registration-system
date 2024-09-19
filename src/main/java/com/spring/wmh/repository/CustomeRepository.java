@@ -12,12 +12,14 @@ import com.spring.wmh.entity.Customer;
 
 @Repository
 public interface CustomeRepository extends JpaRepository<Customer, Integer> {
-
-	
+//
+//	
 	@Query("SELECT c FROM Customer c WHERE c.customerLastName = :lastName OR c.contactNumber = :contact")
     List<Customer> findByLastNameOrContact(@Param("lastName") String lastName, @Param("contact") String contact);
 	
 	Optional<Customer> findByCustomerEmail(String customerEmail);
+	
+	List<Customer> findByCustomerLastName(String customerLastName);
 	
 	Optional<Customer> findByContactNumber(String contactNumber);
 }

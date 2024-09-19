@@ -14,6 +14,7 @@ public class RoomBookingDTO {
 	private String toDate;
 	private byte noOfPeople;
 	private String bookedOn;
+	private double amount;
 	
 	private RoomTypeDTO room;
 	

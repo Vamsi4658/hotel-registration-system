@@ -127,18 +127,19 @@ public class AdminserviceImp implements AdminService{
 	@Override
 	public Object loginValidation(LoginDto loginDto) {
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		
 		Admin admin = adminRepository.findByadminUserName(loginDto.getUserName()).orElse(null);
 		if(admin!=null){
 			if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
 		
-				map.put("Login", "Sucessfull");
+				map.put("adminId", admin.getAdminId());
+//				map.pu)
 			}else {			
-				map.put("LoginFailed", "Invalid details");
+				map.put("login", "Invalid details");
 			}
 		} else {
-			map.put("LoginFailed", "Admin not found");
+			map.put("login", "invalid details");
 		}
 		return map;
 	}

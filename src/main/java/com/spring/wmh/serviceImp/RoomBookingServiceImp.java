@@ -3,6 +3,7 @@ package com.spring.wmh.serviceImp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.datatype.jsr310.ser.MonthDaySerializer;
 import com.spring.wmh.DTO.ConfirmationDto;
 import com.spring.wmh.DTO.CustomerDTO;
 import com.spring.wmh.DTO.RoomBookingDTO;
@@ -68,8 +70,8 @@ public class RoomBookingServiceImp implements RoomBookingService{
 				if (bookingDTO.getToDate()=="") {				
 					map.put("checkOutDate", "check-out date should not be empty");
 				} else {
-					if (LocalDate.parse(bookingDTO.getToDate(), formatter).isBefore(today)) {						
-						map.put("checkOutDate", "check-out date should not be past");
+					if ((LocalDate.parse(bookingDTO.getToDate(), formatter).isBefore(LocalDate.parse(bookingDTO.getFromDate(), formatter)))) {						
+						map.put("checkOutDate", "check out date should not be before lessthen From Date");
 					}
 				}
 			}
@@ -80,8 +82,29 @@ public class RoomBookingServiceImp implements RoomBookingService{
 				map.put("noOfPeople", "max people "+roomsType.getMaxNoOfPeople());
 			}
 			
+			// count the no.of dates 
+			
 			
 			if (map.size()==0) {
+				
+				
+				LocalDate fromDate = LocalDate.parse(bookingDTO.getFromDate(), formatter);
+				LocalDate toDate = LocalDate.parse(bookingDTO.getToDate(), formatter);
+				
+				long daysCount = ChronoUnit.DAYS.between(fromDate, toDate);
+				System.out.println(daysCount);
+				
+				if (daysCount == 0) {
+					daysCount = 1;
+				}
+				
+				double roomPrice =roomsType.getRoomPrice();
+				System.out.println(roomPrice);
+				
+				
+				double price= roomPrice*daysCount;
+				System.out.println("Room prce"+price);
+				
 				RoomBooking roomBooking = new RoomBooking();
 				roomBooking.setCustomer(customer);
 				roomBooking.setRoom(roomsType);
@@ -89,12 +112,18 @@ public class RoomBookingServiceImp implements RoomBookingService{
 				roomBooking.setCheckOutDate(LocalDate.parse(bookingDTO.getToDate(), formatter));
 				roomBooking.setNoOfPeople(bookingDTO.getNoOfPeople());
 				roomBooking.setBookedOn(LocalDate.now());
+				roomBooking.setAmount(price);
+				
+				
 				roomBookingRepository.save(roomBooking);
 				map.put("Status", "booking saved");
+				map.put("bookingId", roomBooking.getBookingId());
+				
+				
 			}
 		} else {
 			
-			map.put("error", "Customer or room details not found");
+			map.put("errorMsg", "Customer or room details not found");
 		}
 		return map;
 	}
@@ -139,14 +168,14 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			map.put("customerLastName", booking.getCustomer().getCustomerLastName());
 			map.put("customerContactNumber", booking.getCustomer().getContactNumber());
 			map.put("roomType", booking.getRoom().getRoomType());
-			map.put("roomPrice", booking.getRoom().getRoomPrice());
+			map.put("totalRoomAmount", booking.getAmount());
 			map.put("checkInDate", booking.getCheckInDate().toString());
 			map.put("checkOutdate", booking.getCheckOutDate().toString());
 			map.put("noOfPeople", booking.getNoOfPeople());
 			map.put("roomBookedOn", booking.getBookedOn().toString());
 			
 		} else {
-			map.put("Error", "Data not found on this ID");
+			map.put("errorMsg", "Data not found on this ID");
 		}
 		return map;
 	}
@@ -238,12 +267,13 @@ public class RoomBookingServiceImp implements RoomBookingService{
 			
 //			ConfirmationDto confirmationDto = new ConfirmationDto();
 			
+			
 			map.put("customerName", booking.getCustomer().getCustomerFirstName()+" "+booking.getCustomer().getCustomerLastName());
 			map.put("roomType", booking.getRoom().getRoomType());
 			map.put("fromDate", booking.getCheckInDate().toString());
 			map.put("toDate", booking.getCheckOutDate().toString());
 			map.put("noOfPeople", booking.getNoOfPeople());
-			map.put("price", booking.getRoom().getRoomPrice());
+			map.put("price", booking.getAmount());
 			map.put("confirmation", true);
 			
 		} else {

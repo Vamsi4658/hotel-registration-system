@@ -36,6 +36,8 @@ public class BillingServiceImp implements BillingService{
 			double totalPrice = roomPrice+1000;
 			map.put("price", roomPrice);
 			map.put("totalBill", totalPrice);
+			map.put("paymentStatus", payment.getPaymentStatus());
+			
 			
 			
 		} else {

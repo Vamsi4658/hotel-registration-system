@@ -43,6 +43,9 @@ public class RoomBooking {
 	@Column(name = "no_of_people")
 	private byte noOfPeople;
 	
+	@Column(name = "amount")
+	private double amount;
+	
 //	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "booking_date", nullable = false)
 	private LocalDate bookedOn;

@@ -38,7 +38,7 @@ public class AdminController {
 	}
 	
 	
-	@GetMapping("/getall")
+	@GetMapping("/		")
 	public List<Map<String, Object>> showAllAdmins() {
 		return adminService.getAllAdmins();
 	}
@@ -62,7 +62,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/login")
-	public Object logInvalidation(@Valid @RequestBody LoginDto logDto) {
-		return adminService.loginValidation(logDto);
+	public ResponseEntity<Object> logInvalidation(@Valid @RequestBody LoginDto logDto) {
+		return new ResponseEntity<>( adminService.loginValidation(logDto),HttpStatus.OK);
 	}
 }

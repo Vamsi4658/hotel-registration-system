@@ -160,7 +160,8 @@ public class CustomerServiceImp implements CustomerService{
 				customer.setAdmin(admin);
 					
 				customeRepository.save(customer);
-				map.put("added sucessfull", "customer: "+customer.getCustomerFirstName()+" "+customer.getCustomerLastName());
+				map.put("status", "succesfully");
+				map.put("customerId", customer.getCustomerId());
 			}
 			
 			return map;
@@ -221,7 +222,7 @@ public class CustomerServiceImp implements CustomerService{
 			map2.put("adminId", customer.getAdmin().getAdminId());
 			map2.put("adminName", customer.getAdmin().getAdminUserName());
 			   
-			map.put("Customer details: ", map2);;
+			map.put("customerDetails", map2);;
 			
 		} else {
 			map.put("Error", "Customer not found");
@@ -289,7 +290,20 @@ public class CustomerServiceImp implements CustomerService{
 		String customerLastName = existingCustomerDto.getCustomerLastName();
 				
 		// Query the database for matching customers
+		if(customerLastName!=null && customerContact==null) {
+			
+			Customer customer = customeRepository.findByContactNumber(customerLastName).orElse(null);
+		}else if(customerLastName==null && customerLastName!=null) {
+			
+			List<Customer> customes = customeRepository.findByCustomerLastName(customerLastName);
+		} else {
+			
+		}
+		
 	    List<Customer> customers = customeRepository.findByLastNameOrContact(customerLastName, customerContact);
+		
+		
+		
 	    List<Map<String, Object>> maps = new ArrayList<>();
 	    Map<String, Object> map = new HashMap<>();
 
@@ -297,9 +311,12 @@ public class CustomerServiceImp implements CustomerService{
 	    	for (Customer customer : customers) {
 	    		
 		        // Populate the map with customer details
-		        map.put("customerName", customer.getCustomerFirstName() + " " + customer.getCustomerLastName());
-		        map.put("customerEmailId", customer.getCustomerEmail());
-		        map.put("customerContactNumber", customer.getContactNumber());
+	    		
+		        map.put("customerId", customer.getCustomerId());
+		        map.put("firstName", customer.getCustomerFirstName());
+		        map.put("lastName", customer.getCustomerLastName());
+		        map.put("emailId", customer.getCustomerEmail());
+		        map.put("contactNumber", customer.getContactNumber());
 		        map.put("address1", customer.getAddress1());
 		        map.put("address2", customer.getAddress2());
 		        map.put("city", customer.getCity());
