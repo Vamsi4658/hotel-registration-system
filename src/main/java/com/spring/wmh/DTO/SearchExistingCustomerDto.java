@@ -7,9 +7,9 @@ import lombok.Data;
 public class SearchExistingCustomerDto {
 
 	
-	@Size(min = 2, message = "LastName should not empty")
+//	@Size(min = 2, message = "LastName should not empty")
 	private String customerLastName;
-	@Size(max =10 , message = "contact should be 10")
+//	@Size(max =10 , message = "contact should be 10")
 	private String customerContact;
 	
 }

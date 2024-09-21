@@ -134,6 +134,8 @@ public class AdminserviceImp implements AdminService{
 			if (loginDto.getUserName().equals(admin.getAdminUserName()) && loginDto.getPassword().equals(admin.getAdminPassword())) {
 		
 				map.put("adminId", admin.getAdminId());
+				map.put("login", "login successful");
+				
 //				map.pu)
 			}else {			
 				map.put("login", "Invalid details");

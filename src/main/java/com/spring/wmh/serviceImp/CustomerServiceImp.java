@@ -34,17 +34,18 @@ public class CustomerServiceImp implements CustomerService{
 	public Object saveCustomer(int id, CustomerDTO customerDTO) { 
 		
 		Map<String, Object> map =new HashMap<>();
+		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		
 		Customer eMail = customeRepository.findByCustomerEmail(customerDTO.getCustomerEmail()).orElse(null);
 		Customer cNum = customeRepository.findByContactNumber(customerDTO.getContactNumber()).orElse(null);
 		
 		Admin admin = adminRepository.findById(id).orElse(null);
 		
-		// validate Admin is null or not
+// validate Admin is null or not
 		
 		if (admin !=null) {
 			
-			Customer customer = new Customer();
 //firstName
 			if (customerDTO.getCustomerFirstName()!=null) {			
 				if (customerDTO.getCustomerFirstName()=="" || customerDTO.getCustomerFirstName().length()<=2 ) {
@@ -142,6 +143,7 @@ public class CustomerServiceImp implements CustomerService{
 			
 			if (map.size()==0) {
 				
+				Customer customer = new Customer();
 				
 				customer.setCustomerFirstName(customerDTO.getCustomerFirstName());
 				customer.setCustomerLastName(customerDTO.getCustomerLastName());
@@ -160,6 +162,7 @@ public class CustomerServiceImp implements CustomerService{
 				customer.setAdmin(admin);
 					
 				customeRepository.save(customer);
+				
 				map.put("status", "succesfully");
 				map.put("customerId", customer.getCustomerId());
 			}
@@ -283,58 +286,101 @@ public class CustomerServiceImp implements CustomerService{
 	}
 
 
+//	@Override
+//	public List<Map<String, Object>> searchExistedCustomer(SearchExistingCustomerDto existingCustomerDto) {
+//		
+//		String customerContact = existingCustomerDto.getCustomerContact();
+//		String customerLastName = existingCustomerDto.getCustomerLastName();
+//				
+////		 Query the database for matching customers
+////		if(customerLastName!=null && customerContact==null) {
+////		}else if(customerLastName==null && customerContact!=null) {		
+////			Customer customer = customeRepository.findByContactNumber(customerLastName).orElse(null);	
+////		} else {
+////			
+////		}
+////		List<Customer> customers = customeRepository.findByCustomerLastName(customerLastName);	
+//	    List<Customer> customers = customeRepository.findByLastNameOrContact(customerLastName, customerContact);
+//	    List<Map<String, Object>> maps = new ArrayList<>();
+//	    Map<String, Object> map = new HashMap<>();
+//
+//	    if (customers.size()!=0) {
+//	    	for (Customer customer : customers) {
+//	    		
+//		        // Populate the map with customer details
+//	    		
+//		        map.put("customerId", customer.getCustomerId());
+//		        map.put("firstName", customer.getCustomerFirstName());
+//		        map.put("lastName", customer.getCustomerLastName());
+//		        map.put("emailId", customer.getCustomerEmail());
+//		        map.put("contactNumber", customer.getContactNumber());
+//		        map.put("address1", customer.getAddress1());
+//		        map.put("address2", customer.getAddress2());
+//		        map.put("city", customer.getCity());
+//		        map.put("pincode", customer.getPincode());
+//		        map.put("adminId", customer.getAdmin().getAdminId());
+//		        map.put("adminName", customer.getAdmin().getAdminUserName());
+//		        
+//
+//		        // Add map to the list
+//		        maps.add(map);
+//		    }
+//		} else {
+//			map.put("Error", "Data not found");
+//		}
+//	    return maps;
+//	}
+//	
 	@Override
 	public List<Map<String, Object>> searchExistedCustomer(SearchExistingCustomerDto existingCustomerDto) {
-		
-		String customerContact = existingCustomerDto.getCustomerContact();
-		String customerLastName = existingCustomerDto.getCustomerLastName();
-				
-		// Query the database for matching customers
-		if(customerLastName!=null && customerContact==null) {
-			
-			Customer customer = customeRepository.findByContactNumber(customerLastName).orElse(null);
-		}else if(customerLastName==null && customerLastName!=null) {
-			
-			List<Customer> customes = customeRepository.findByCustomerLastName(customerLastName);
-		} else {
-			
-		}
-		
-	    List<Customer> customers = customeRepository.findByLastNameOrContact(customerLastName, customerContact);
-		
-		
-		
+
+	    String customerContact = existingCustomerDto.getCustomerContact();
+	    String customerLastName = existingCustomerDto.getCustomerLastName();
+
+//	    // Query the database for matching customers
+//	    List<Customer> customers = customeRepository.findByLastNameOrContact(customerLastName, customerContact);
+
+	    /*
+	     *    updated query 
+	     */
+	    List<Customer> customers = customeRepository.findByLastNameOrContact(
+	    	    customerLastName.isEmpty() ? null : customerLastName, 
+	    	    customerContact.isEmpty() ? null : customerContact
+	    	);
 	    List<Map<String, Object>> maps = new ArrayList<>();
-	    Map<String, Object> map = new HashMap<>();
 
-	    if (customers.size()!=0) {
-	    	for (Customer customer : customers) {
-	    		
-		        // Populate the map with customer details
-	    		
-		        map.put("customerId", customer.getCustomerId());
-		        map.put("firstName", customer.getCustomerFirstName());
-		        map.put("lastName", customer.getCustomerLastName());
-		        map.put("emailId", customer.getCustomerEmail());
-		        map.put("contactNumber", customer.getContactNumber());
-		        map.put("address1", customer.getAddress1());
-		        map.put("address2", customer.getAddress2());
-		        map.put("city", customer.getCity());
-		        map.put("pincode", customer.getPincode());
-		        map.put("adminId", customer.getAdmin().getAdminId());
-		        map.put("adminName", customer.getAdmin().getAdminUserName());
-		        
+	    // Check if any customers were found
+	    if (!customers.isEmpty()) {
+	        for (Customer customer : customers) {
 
-		        // Add map to the list
-		        maps.add(map);
-		    }
-		} else {
-			map.put("Error", "Data not found");
-		}
+	            // Create a new map for each customer
+	            Map<String, Object> map = new HashMap<>();
+
+	            // Populate the map with customer details
+	            map.put("customerId", customer.getCustomerId());
+	            map.put("firstName", customer.getCustomerFirstName());
+	            map.put("lastName", customer.getCustomerLastName());
+	            map.put("emailId", customer.getCustomerEmail());
+	            map.put("contactNumber", customer.getContactNumber());
+	            map.put("address1", customer.getAddress1());
+	            map.put("address2", customer.getAddress2());
+	            map.put("city", customer.getCity());
+	            map.put("pincode", customer.getPincode());
+	            map.put("adminId", customer.getAdmin().getAdminId());
+	            map.put("adminName", customer.getAdmin().getAdminUserName());
+
+	            // Add each map to the list
+	            maps.add(map);
+	        }
+	    } else {
+	        // If no customers are found, add an error message to the map
+	        Map<String, Object> errorMap = new HashMap<>();
+	        errorMap.put("Error", "Data not found");
+	        maps.add(errorMap);
+	    }
+
 	    return maps;
 	}
-	
-	
 	
 
 }

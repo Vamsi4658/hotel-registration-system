@@ -14,8 +14,11 @@ import com.spring.wmh.entity.Customer;
 public interface CustomeRepository extends JpaRepository<Customer, Integer> {
 //
 //	
-	@Query("SELECT c FROM Customer c WHERE c.customerLastName = :lastName OR c.contactNumber = :contact")
-    List<Customer> findByLastNameOrContact(@Param("lastName") String lastName, @Param("contact") String contact);
+//	@Query("SELECT c FROM Customer c WHERE c.customerLastName LIKE CONCAT(:lastName, '%') OR c.contactNumber LIKE CONCAT(:contact, '%')")
+	@Query("SELECT c FROM Customer c WHERE "
+		     + "(COALESCE(:lastName, '') = '' OR c.customerLastName LIKE CONCAT(:lastName, '%')) "
+		     + "AND (COALESCE(:contact, '') = '' OR c.contactNumber LIKE CONCAT(:contact, '%'))")
+	List<Customer> findByLastNameOrContact(@Param("lastName") String lastName, @Param("contact") String contact);
 	
 	Optional<Customer> findByCustomerEmail(String customerEmail);
 	

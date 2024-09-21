@@ -81,6 +81,7 @@ public class PaymentServiceImp implements PaymentService{
 				payment.setPaymentDate(LocalDate.now());
 				paymentRepository.save(payment);
 				map.put("status", " Payment successfully ");
+				map.put("paymentId", payment.getPaymentId());
 				return map;
 			}		
 

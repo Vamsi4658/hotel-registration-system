@@ -30,14 +30,15 @@ public class RoomTypeServiceImp implements RoomTypeService {
 		if (roomTypeDTO.getRoomType()==null) {				
 			map.put("roomType", "RoomType should not me null");
 		}else {
-			if (roomTypeDTO.getRoomType().length()>=2) {				
+			if (roomTypeDTO.getRoomType().length()==0) {				
 				map.put("roomType", "RoomType date should not be empty");
 			}
 		}
 		
-		if (roomTypeDTO.getRoomPrice()!=0) {				
+		if (roomTypeDTO.getRoomPrice()==0) {				
 			map.put("roomPrice", "RoomPrice should not be empty");
-		} if (roomTypeDTO.getMaxNoOfPeople()!=0 && roomTypeDTO.getMaxNoOfPeople()<=6 ) {				
+		} 
+		if (roomTypeDTO.getMaxNoOfPeople()!=0 && roomTypeDTO.getMaxNoOfPeople()>6 ) {				
 			map.put("maxPeople", "maximum people 6");
 		}
 		
